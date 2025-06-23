@@ -6,13 +6,13 @@ ARG OPENRESTY_VERSION="1.27.1.2"
 ARG NGINX_VERSION="1.27.1"
 ARG IN_GFW=""
 
-ENV DEBIAN_FRONTEND=noninteractive
+#ENV DEBIAN_FRONTEND=noninteractive
 
 COPY misc/gfw.sh /root/docker-gfw.sh
 
 RUN ( [ -n "${IN_GFW}" ] && /bin/bash /root/docker-gfw.sh bookworm ) && \
-  apt-get update -y && apt-get install -y gcc make git libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev libedit-dev && \
-  mkdir -p /data/soft/openresty && cd /data/soft && \
+  apt-get update -y && apt-get install -y gcc make git libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev libedit-dev
+RUN mkdir -p /data/soft/openresty && cd /data/soft && \
   curl -Lo /data/soft/openresty-${OPENRESTY_VERSION}.tar.gz https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && \
   tar --strip-component=1 -C /data/soft/openresty -zxf /data/soft/openresty-${OPENRESTY_VERSION}.tar.gz && \
   ( [ -n "${IN_GFW}" ] && /bin/bash /root/docker-gfw.sh git ) && \
