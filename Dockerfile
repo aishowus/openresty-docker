@@ -10,7 +10,7 @@ ARG IN_GFW=""
 
 COPY misc/gfw.sh /root/docker-gfw.sh
 
-RUN ( [ -n "${IN_GFW}" ] && /bin/bash /root/docker-gfw.sh bookworm )
+RUN if [ -n "${IN_GFW}" ]; then /bin/bash /root/docker-gfw.sh bookworm; fi
 RUN apt-get update -y && apt-get install -y gcc make git libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev libedit-dev
 RUN mkdir -p /data/soft/openresty && cd /data/soft && \
   curl -Lo /data/soft/openresty-${OPENRESTY_VERSION}.tar.gz https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && \
