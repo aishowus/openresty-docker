@@ -43,7 +43,7 @@ COPY --from=builder /usr/local/openresty/nginx/modules \
 COPY misc/gfw.sh /root/docker-gfw.sh
 
 RUN cp /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak && \
-  ( [ -n ${IN_GFW} ] && /bin/bash /root/docker-gfw.sh bookworm ) && \
+  (if [ -n "${IN_GFW}" ]; then /bin/bash /root/docker-gfw.sh bookworm; fi ) && \
   apt-get update -y && apt-get install -y libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev libedit-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/* /root/docker-gfw.sh && \
   mv /etc/apt/sources.list.d/debian.sources.bak /etc/apt/sources.list.d/debian.sources
