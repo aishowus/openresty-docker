@@ -6,6 +6,8 @@ ARG OPENRESTY_VERSION="1.27.1.2"
 ARG NGINX_VERSION="1.27.1"
 ARG IN_GFW
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 COPY misc/gfw.sh /root/docker-gfw.sh
 
 RUN ( [ -n ${IN_GFW} ] && /bin/bash /root/docker-gfw.sh bookworm ) && \
@@ -38,4 +40,11 @@ COPY --from=builder /usr/bin/njs /usr/bin/njs
 COPY --from=builder /usr/local/openresty/nginx/modules \
   /usr/local/openresty/nginx/modules
 
+COPY misc/gfw.sh /root/docker-gfw.sh
+
+RUN cp /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak && \
+  ( [ -n ${IN_GFW} ] && /bin/bash /root/docker-gfw.sh bookworm ) && \
+  apt-get update -y && apt-get install -y libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt-dev libedit-dev && \
+  apt-get clean && rm -rf /var/lib/apt/lists/* /root/docker-gfw.sh && \
+  mv /etc/apt/sources.list.d/debian.sources.bak /etc/apt/sources.list.d/debian.sources
 
